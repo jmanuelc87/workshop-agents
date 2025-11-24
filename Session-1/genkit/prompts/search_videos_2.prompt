@@ -19,16 +19,7 @@ Find and present the 5 most relevant YouTube videos related to this topic => {{t
 3.  **Filter for Relevance:** From the results, determine the top 5 most relevant videos. Prioritize those with the topic in their **title** or **description**. 
     If fewer than 5 relevant videos are found, present all available.
 4.  **Select Best Video for Transcription:** From the filtered videos, identify the most suitable one for transcription based on criteria such as audio clarity, 
-    direct relevance of content for transcription, and the availability of existing captions or transcripts (if the tool allows).
-5.  **Create a transcription and correct it if necessary the text**.
+    direct relevance of content for transcription, and the availability of existing captions or transcripts, and the video duration, please select the short video.
+5.  **Create a transcription and correct it if necessary the text and summarize it for token usage**.
 6.  **Create a blog with a introduction, main content, conclusions and references**
-7.  **Create and image using a tool based on the blog introduction** 
-8.  **Should create the following output:**
-    * **Title:** [Video Title]
-    * **Description:** [Brief Video Description]
-    * **Link:** [Video URL]
-    * **Link Best Video for Transcription:** [Video URL]
-    * Blog Title 
-    * Blog content
-    * Blog conclusions
-    * Blog references
+7.  **Create and image using createImageBlog tool based on the blog** 

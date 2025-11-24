@@ -9,12 +9,13 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@genkit-ai/googleai": "^1.13.0",
-    "@genkit-ai/vertexai": "^1.14.0",
+    "@genkit-ai/googleai": "^1.24.0",
+    "@genkit-ai/vertexai": "^1.24.0",
     "@types/node": "^24.0.7",
     "axios": "^1.10.0",
     "data-urls": "^5.0.0",
-    "genkit": "^1.13.0"
+    "dotenv": "^17.2.3",
+    "genkit": "^1.24.0"
   },
   "devDependencies": {
     "@types/data-urls": "^3.0.4"

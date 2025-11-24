@@ -1,20 +1,24 @@
 import { genkit, z } from "genkit";
-import { googleAI, gemini20Flash } from "@genkit-ai/googleai";
+import { googleAI } from "@genkit-ai/googleai";
 import { vertexAI, imagen3Fast } from "@genkit-ai/vertexai";
 import parseDataURL from "data-urls";
 import { writeFile } from "node:fs/promises";
 import axios from "axios";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 const API_URL_BASE =
   "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&";
 
-const API_KEY = "API_KEY";
+const API_KEY = process.env.YOUTUBE_API_KEY;
+if (!API_KEY) throw new Error("YOUTUBE_API_KEY environment variable not set");
 
 const ai = genkit({
   plugins: [googleAI(), vertexAI()],
 });
 
-const resultSearchVideos = z.object({
+const outputSearchVideos = z.object({
   videos: z.array(
     z.object({
       title: z.string(),
@@ -29,12 +33,15 @@ const resultSearchVideos = z.object({
   blogImage: z.string(),
 });
 
-const getYoutubeVideos = ai.defineTool(
+const searchYoutubeVideos = ai.defineTool(
   {
-    name: "getYoutubeVideos",
-    description: "Get videos from youtube",
+    name: "searchYoutubeVideos",
+    description:
+      "Searches YouTube for videos matching a specific query. Use this tool when the user explicitly asks for videos, visual tutorials, music, or general content consumption on YouTube. Returns a JSON string with video metadata (titles, IDs, snippets).",
     inputSchema: z.object({
-      text: z.string(),
+      text: z
+        .string()
+        .describe("The search terms, keywords, or topic to find videos for."),
     }),
     outputSchema: z.string(),
   },
@@ -55,15 +62,15 @@ const getYoutubeVideos = ai.defineTool(
 
 const getTranscription = ai.defineTool(
   {
-    name: "getTransciption",
-    description: "Get Transciption from youtube",
+    name: "getTranscription",
+    description: "Get transcription from youtube",
     inputSchema: z.object({
       url: z.string(),
     }),
     outputSchema: z.string().nullable(),
   },
   async ({ url }) => {
-    console.log("Getting Transciption from youtube...");
+    console.log("Getting transcription from youtube...");
     const { text } = await ai.generate({
       prompt: [
         {
@@ -76,16 +83,18 @@ const getTranscription = ai.defineTool(
           },
         },
       ],
-      model: gemini20Flash,
+      model: googleAI.model("gemini-2.5-flash", {
+        temperature: 0.0,
+      }),
     });
     console.log("transcription created", text);
     return text;
   }
 );
 
-const getImage = ai.defineTool(
+const createImageBlog = ai.defineTool(
   {
-    name: "getImage",
+    name: "createImageBlog",
     description: "Create an image based on a text",
     inputSchema: z.object({
       text: z.string(),
@@ -118,7 +127,7 @@ export const searchSummaryVideosFlow = ai.defineFlow(
     inputSchema: z.object({
       text: z.string(),
     }),
-    outputSchema: resultSearchVideos.nullable(),
+    outputSchema: outputSearchVideos.nullable(),
   },
   async ({ text }) => {
     const searchVideoPrompt = await ai.prompt("search_videos_2");
@@ -127,8 +136,8 @@ export const searchSummaryVideosFlow = ai.defineFlow(
         text,
       },
       {
-        output: { schema: resultSearchVideos.nullable() },
-        tools: [getYoutubeVideos, getTranscription, getImage],
+        output: { schema: outputSearchVideos.nullable() },
+        tools: [searchYoutubeVideos, getTranscription, createImageBlog],
       }
     );
 

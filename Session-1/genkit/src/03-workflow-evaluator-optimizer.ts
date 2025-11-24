@@ -2,7 +2,7 @@ import { genkit, z } from "genkit";
 import {
   googleAI,
   gemini20Flash,
-  gemini25FlashPreview0417,
+  gemini20FlashLite,
 } from "@genkit-ai/googleai";
 
 const ai = genkit({
@@ -37,6 +37,7 @@ export const translation = ai.defineFlow(
 
       const { output: translation } = await ai.generate({
         prompt: currentPrompt,
+        model: gemini20FlashLite,
         output: { schema: z.object({ translation: z.string() }) },
         system: "You are an expert translator. Spanish to English. ",
       });
@@ -52,7 +53,9 @@ export const translation = ai.defineFlow(
                 - Overall Impression: Based on your assessment, would you rate this translation as Good or Bad`,
         system:
           "You are an expert translator. English to Spanish. You are native Spanish.",
-        model: gemini25FlashPreview0417,
+        model: googleAI.model("gemini-2.5-flash", {
+          temperature: 0.0,
+        }),
         output: { schema: Feedback },
       });
 
@@ -80,3 +83,9 @@ export const translation = ai.defineFlow(
     return finalTranslation;
   }
 );
+
+// examples:
+// ¿Lo decías en serio, o lo decías por decirlo?
+// ¿A quién le estás escribiendo esa carta? No es asunto tuyo
+// Es en los momentos de decisión cuando se forja nuestro destino.
+// La inquebrantable voluntad de emprender, a pesar de los obstáculos que la burocracia interpone continuamente, es el motor que impulsa a quienes aspiran a transformar el panorama económico a largo plazo.

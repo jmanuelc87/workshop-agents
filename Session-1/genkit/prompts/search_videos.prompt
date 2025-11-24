@@ -15,7 +15,7 @@ Focus on delivering concise and highly relevant information.
 **Instructions:**
 
 1.  **Identify Search Query:** Extract the core topic or text from the user's input.
-2.  **Execute Search:** Use the getYoutubeVideos tool with the extracted query to fetch an initial list of videos.
+2.  **Execute Search:** Use the searchYoutubeVideos tool with the extracted query to fetch an initial list of videos.
 3.  **Filter for Relevance:** From the results, determine the top 5 most relevant videos. 
     Prioritize those with the topic in their **title** or **description**. 
     If fewer than 5 relevant videos are found, present all available.
