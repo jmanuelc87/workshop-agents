@@ -3,8 +3,8 @@ from google.genai import types
 from google.adk.agents import Agent
 from google.adk.models.google_llm import Gemini
 from google.adk.tools import google_search
-from .commons import call_agent_async
-from .commons import get_runner
+from commons import call_agent_async
+from commons import get_runner
 from dotenv import load_dotenv
 
 load_dotenv()
