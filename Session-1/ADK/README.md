@@ -4,6 +4,8 @@ This repository contains multiple agent implementations demonstrating different 
 
 ## 📁 Agents Overview
 
+<img width="1938" height="1144" alt="agent-decision-tree" src="https://github.com/user-attachments/assets/8848c7de-41e4-42c3-a18b-1f5d95adb108" />
+
 ### 1. First Agent (`first_agent/`)
 
 **Pattern:** Simple Single Agent
@@ -26,6 +28,9 @@ A basic conversational agent that demonstrates the fundamentals of the ADK frame
 ---
 
 ### 2. Orchestrator Agent (`orchestrator_agent/`)
+
+<img width="1630" height="632" alt="multi-agent-team" src="https://github.com/user-attachments/assets/260835f2-91aa-4774-8543-12b659aaf6b3" />
+
 
 **Pattern:** Agent-as-Tool
 
@@ -54,6 +59,8 @@ An agent that coordinates other agents by calling them as tools, allowing for dy
 
 ### 3. Sequential Agent (`sequential_agent/`)
 
+<img width="2124" height="138" alt="sequential-agent" src="https://github.com/user-attachments/assets/ec56d60f-45da-4d60-a846-a912d6dc07fe" />
+
 **Pattern:** Linear Pipeline
 
 A multi-agent system that executes agents in a predefined sequential order, where each agent builds upon the previous agent's output.
@@ -79,6 +86,8 @@ User Query → Outline Agent → Writer Agent → Editor Agent → Final Blog Po
 ---
 
 ### 4. Parallel Agent (`parallel_agent/`)
+
+<img width="1186" height="820" alt="parallel-agent" src="https://github.com/user-attachments/assets/a85ddcb9-a294-4967-a26f-b1a1e9d5f34c" />
 
 **Pattern:** Concurrent Execution + Aggregation
 
@@ -108,6 +117,8 @@ User Query ─> Parallel ├─> Health Researcher ─┼─> Aggregator Agent �
 ---
 
 ### 5. Loop Agent (`loop_agent/`)
+
+<img width="506" height="1246" alt="loop-agent" src="https://github.com/user-attachments/assets/d9acc26c-4efe-467d-aa18-b51408fa0149" />
 
 **Pattern:** Iterative Refinement with Exit Condition
 
