@@ -18,6 +18,18 @@ Explore fundamental agent patterns using **Google ADK** (Python) and **Firebase 
 - Iterative refinement and feedback loops
 - Multi-modal AI (video, text, images)
 
+### [Session 2](./Session-2) - Multi-Agent Systems & Data Pipelines
+
+This session builds on the fundamentals by constructing a practical, multi-agent system for a virtual coffee shop.
+
+- **Barista Agent System**: An advanced implementation featuring an orchestrator managing specialized agents (Head Barista, Creative Director) to handle customer interactions, menu queries, and creative tasks.
+- **Data Ingestion Pipeline**: A separate pipeline demonstrates how to process and structure external data (`menu.md`) to make it available for the agent system.
+
+**Topics covered:**
+- Complex multi-agent collaboration
+- System design for specialized agent roles
+- Integrating data ingestion pipelines with agent frameworks
+
 ## 🚀 Quick Start
 
 Each session contains detailed READMEs with setup instructions and examples.
@@ -25,6 +37,7 @@ Each session contains detailed READMEs with setup instructions and examples.
 ```bash
 cd Session-1/ADK     # Python agents with Google ADK
 cd Session-1/genkit  # TypeScript agents with Firebase Genkit
+cd Session-2/barista-agent-system # Python multi-agent system
 ```
 
 ## 🎯 Learning Objectives
