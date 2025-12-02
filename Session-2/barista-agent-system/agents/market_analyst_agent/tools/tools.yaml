@@ -1,0 +1,71 @@
+sources:
+  bigquery-con:
+    kind: "bigquery"
+    project: "devhack-3f0c2"
+
+tools:
+  bigquery_get_table_info:
+    kind: bigquery-get-table-info
+    source: bigquery-con
+    description: Use this tool to get table metadata.
+  bigquery_list_table_ids:
+    kind: bigquery-list-table-ids
+    source: bigquery-con
+    description: Use this tool to get table metadata.
+  drink_trend:
+    kind: bigquery-sql
+    source: bigquery-con
+    statement: |
+        SELECT
+          title as term,
+          SUM(views) as popularity_score
+        FROM `bigquery-public-data.wikipedia.pageviews_2025`
+        WHERE datehour >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 30 DAY)
+        AND wiki = 'en'
+        AND title IN (
+          -- Base
+          'Coffee', 'Espresso', 'Cappuccino', 'Latte', 
+          -- Global Favorites
+          'Flat_white', 'Cortado', 'Affogato',
+          -- Cold & Refreshing
+          'Cold_brew', 'Nitro_cold_brew',
+          -- Teas
+          'Matcha', 'Masala_chai', 'Golden_milk',
+          -- Secreet
+          'Geisha_coffee',
+          'Pumpkin_Spice_Latte'
+        )
+        GROUP BY title
+        ORDER BY popularity_score DESC
+        LIMIT 10;
+    description: |
+        Use this tool to retrieve real-time global popularity trends for coffee, teas, and special menu items.
+        It queries Wikipedia pageviews for the last 30 days to rank drinks 
+        based on actual user interest.
+        Returns a list of items sorted by popularity score (descending).
+
+        Example:
+        [
+            {
+                "term": "Matcha",
+                "popularity_score": 27632
+            },
+            {
+                "term": "Coffee",
+                "popularity_score": 26984
+            },
+            {
+                "term": "Geisha_coffee",
+                "popularity_score": 1205
+            },
+            {
+                "term": "Pumpkin_Spice_Latte",
+                "popularity_score": 348
+            }
+        ]
+
+toolsets:
+    drinks_toolset:
+        - bigquery_get_table_info
+        - bigquery_list_table_ids
+        - drink_trend

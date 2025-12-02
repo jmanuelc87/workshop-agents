@@ -1,17 +1,20 @@
+import asyncio
 from typing import List
-
 from dotenv import load_dotenv
 from google import genai
 from google.cloud import firestore
 from google.cloud.firestore_v1.base_vector_query import DistanceMeasure
 from google.cloud.firestore_v1.vector import Vector
 from google.genai import types
-from mcp.server.fastmcp import FastMCP
+#from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 
 load_dotenv()
 
+MCP_PORT = 8080
+
 # Initialize FastMCP server
-mcp = FastMCP(name="menudb", port=9000)
+mcp = FastMCP(name="menudb", port=int(MCP_PORT))
 
 # Constants
 MENU_FIRESTORE_COLLECTION = "menu"
@@ -20,15 +23,16 @@ GEMINI_MODEL_EMBEDDING = "gemini-embedding-001"
 
 
 @mcp.tool()
-def get_menu_items(type_coffee: str) -> List[str]:
+def get_menu_items(search_query: str) -> List[str]:
     """
-    Returns a list of menu items based on the type of coffee.
-
+    Search the menu database for drinks. 
+    Use this to find specific items, categories, or ingredients.
+    
     Args:
-        type_coffee (str): The type of coffee to search for.
-
+        search_query (str): The term to search for (e.g., "coffee", "tea", "matcha", "cold drinks", "price of latte").
+    
     Returns:
-        List[str]: A list of menu items.
+        List[str]: A list of matching menu items with descriptions and prices.
     """
 
     try:
@@ -40,7 +44,7 @@ def get_menu_items(type_coffee: str) -> List[str]:
 
         result = client.models.embed_content(
             model=GEMINI_MODEL_EMBEDDING,
-            contents=type_coffee,
+            contents=search_query,
             config=types.EmbedContentConfig(
                 task_type="SEMANTIC_SIMILARITY",
                 output_dimensionality=768,
@@ -74,4 +78,11 @@ def get_menu_items(type_coffee: str) -> List[str]:
 
 # --- Run Server ---
 if __name__ == "__main__":
-    mcp.run(transport="streamable-http")
+    # mcp.run(transport="streamable-http")
+    asyncio.run(
+        mcp.run_async(
+            transport="streamable-http",
+            host="0.0.0.0",
+            port=MCP_PORT,
+        )
+    )

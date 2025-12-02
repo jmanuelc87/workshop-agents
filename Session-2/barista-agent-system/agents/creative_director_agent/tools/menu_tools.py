@@ -16,15 +16,16 @@ DATABASE_NAME = "embeddings"
 GEMINI_MODEL_EMBEDDING = "gemini-embedding-001"
 
 
-def get_menu_items(type_coffee: str) -> List[str]:
+def get_menu_items(search_query: str) -> List[str]:
     """
-    Returns a list of menu items based on the type of coffee.
-
+    Search the menu database for drinks. 
+    Use this to find specific items, categories, or ingredients.
+    
     Args:
-        type_coffee (str): The type of coffee to search for.
-
+        search_query (str): The term to search for (e.g., "coffee", "tea", "matcha", "cold drinks", "price of latte").
+    
     Returns:
-        List[str]: A list of menu items.
+        List[str]: A list of matching menu items with descriptions and prices.
     """
 
     try:
@@ -36,7 +37,7 @@ def get_menu_items(type_coffee: str) -> List[str]:
 
         result = client.models.embed_content(
             model=GEMINI_MODEL_EMBEDDING,
-            contents=type_coffee,
+            contents=search_query,
             config=types.EmbedContentConfig(
                 task_type="SEMANTIC_SIMILARITY",
                 output_dimensionality=768,
