@@ -16,9 +16,13 @@ client.setup_logging()
 load_dotenv()
 
 LLM_AGENT = os.getenv("LLM_AGENT")
-
 if not LLM_AGENT:
     raise ValueError("The LLM_AGENT environment variable is not set.")
+
+MCP_MENU_SERVER_URL = os.getenv("MCP_MENU_SERVER_URL")
+if not MCP_MENU_SERVER_URL:
+    raise ValueError(
+        "The MCP_MENU_SERVER_URL environment variable is not set.")
 
 agent_config = load_agent_config()
 
@@ -35,7 +39,7 @@ head_barista_agent = LlmAgent(
         get_today_date,
         MCPToolset(
             connection_params=StreamableHTTPServerParams(
-                url='http://127.0.0.1:9000/mcp',
+                url=MCP_MENU_SERVER_URL,
             ),
         ),
     ],

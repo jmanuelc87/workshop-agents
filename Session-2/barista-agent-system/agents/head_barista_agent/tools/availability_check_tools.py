@@ -14,22 +14,64 @@ def check_availability_coffee(datetime: str) -> list[str]:
     try:
         # Create a dictionary where the key is the military time and the value is the type of coffee based on this information RULES
         availability_coffee_type = {
-            "08:00": ["Mocha Magic", "Hazelnut Harmony"],
-            "09:00": ["Mocha Magic", "Hazelnut Harmony"],
-            "10:00": ["Mocha Magic", "Hazelnut Harmony"],
-            "11:00": ["Mocha Magic", "Hazelnut Harmony"],
-            #
-            "12:00": ["Vanilla Dream", "Hazelnut Harmony"],
-            "13:00": ["Vanilla Dream", "Hazelnut Harmony"],
-            #
-            "14:00": ["Vanilla Dream"],
-            "15:00": ["Vanilla Dream"],
-            #
-            "16:00": ["Caramel Delight"],
-            "17:00": ["Caramel Delight"],
-            "18:00": ["Caramel Delight"],
-            "19:00": ["Caramel Delight", "Hazelnut Harmony"],
-            "20:00": ["Caramel Delight", "Mocha Magic", "Hazelnut Harmony"],
+            # --- Morning (Hot Drinks & Classics) ---
+            "08:00": [
+                "Mocha Magic", "Vanilla Dream", "Espresso Elixir", "Latte Lux",
+                "Cappuccino Charm", "Flat White Velvet"
+            ],
+            "09:00": [
+                "Mocha Magic", "Vanilla Dream", "Espresso Elixir", "Latte Lux",
+                "Cappuccino Charm", "Flat White Velvet", "Matcha Zen"
+            ],
+            "10:00": [
+                "Caramel Delight", "Hazelnut Harmony", "Latte Lux", "Americano Bold",
+                "Chai Spice Serenity", "Matcha Zen"
+            ],
+            "11:00": [
+                "Caramel Delight", "Honey Lavender Haze", "Espresso Elixir", "Cortado Cut",
+                "Flat White Velvet", "Golden Turmeric Glow"
+            ],
+
+            # --- Noon (Shift to Cold Drinks & Alternatives) ---
+            "12:00": [
+                "Vanilla Dream", "Hazelnut Harmony", "Cold Brew Breeze", "Iced Caramel Cloud",
+                "Matcha Zen", "Chai Spice Serenity"
+            ],
+            "13:00": [
+                "Vanilla Dream", "Hazelnut Harmony", "Cold Brew Breeze", "Iced Caramel Cloud",
+                "Flat White Velvet", "Americano Bold",
+                # NOTE: Affogato Bliss and Nitro Noir are intentionally excluded for testing 'Sold Out' logic.
+            ],
+
+            # --- Afternoon (Desserts and Limited Stock) ---
+            "14:00": [
+                "Vanilla Dream", "Cold Brew Breeze", "Latte Lux", "Cortado Cut",
+                "Golden Turmeric Glow"
+            ],
+            "15:00": [
+                "Mocha Magic", "Caramel Delight", "Iced Caramel Cloud", "Chai Spice Serenity"
+            ],
+
+            # --- Late Afternoon (Return to Classics) ---
+            "16:00": [
+                "Caramel Delight", "Espresso Elixir", "Latte Lux", "Cappuccino Charm",
+                "Flat White Velvet"
+            ],
+            "17:00": [
+                "Caramel Delight", "Honey Lavender Haze", "Americano Bold", "Cortado Cut"
+            ],
+            "18:00": [
+                "Caramel Delight", "Mocha Magic", "Hazelnut Harmony", "Matcha Zen"
+            ],
+
+            # --- Evening (Limited Stock and Specials) ---
+            "19:00": [
+                "Mocha Magic", "Vanilla Dream", "Hazelnut Harmony", "Espresso Elixir",
+                "Chai Spice Serenity"
+            ],
+            "20:00": [
+                "Caramel Delight", "Mocha Magic", "Latte Lux", "Golden Turmeric Glow"
+            ],
         }
 
         logging.info(f"Checking availability for {datetime}")
