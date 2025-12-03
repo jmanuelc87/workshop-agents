@@ -13,7 +13,8 @@ Session-2/
 │   └── agents/
 │       ├── orchestrator_agent/     # Router agent
 │       ├── head_barista_agent/     # Menu expert
-│       └── creative_director_agent/ # Image generation & promos
+│       ├── creative_director_agent/ # Image generation & promos
+│       └── market_analyst_agent/   # Trends & data analytics
 │
 └── pipeline-data-ingestion-menu/   # Menu data pipeline
     ├── src/ingestion_menu.py       # Embedding generation
@@ -26,7 +27,7 @@ Session-2/
 Routes user queries to specialized agents:
 - Menu questions → Head Barista
 - Image requests → Creative Director
-- Trend analysis → Market Analyst
+- Trend analysis & recommendations → Market Analyst
 
 ### 2. Head Barista Agent
 Handles menu and availability:
@@ -40,6 +41,13 @@ Visual experience and marketing:
 - Daily promotions management
 - GCS image storage
 
+### 4. Market Analyst Agent
+Data-driven insights and recommendations:
+- Global trend analysis via BigQuery
+- Wikipedia pageview statistics (30-day window)
+- MCP Toolbox for Database integration
+- Real-time popularity scoring
+
 ## Key Components
 
 ### MCP Server
@@ -47,6 +55,13 @@ Visual experience and marketing:
 - **Function**: Vector search in Firestore
 - **Embeddings**: gemini-embedding-001 (768d)
 - **Storage**: Firestore database `embeddings`
+
+### MCP Toolbox for Database
+- **Port**: 6000
+- **Function**: BigQuery database access for trend analysis
+- **Dataset**: bigquery-public-data.wikipedia.pageviews_2025
+- **Tools**: SQL queries, table metadata, and custom analytics
+- **Configuration**: YAML-based tool definitions in `agents/market_analyst_agent/tools/tools.yaml`
 
 ### Data Pipeline
 1. **Chunking**: Markdown splitting by headers
@@ -61,6 +76,7 @@ Visual experience and marketing:
 - google-genai ^1.46.0
 - google-cloud-firestore ^2.21.0
 - mcp ^1.22.0
+- toolbox-core (MCP Toolbox client)
 
 **Pipeline**:
 - langchain ^1.0.2
@@ -75,25 +91,46 @@ cd pipeline-data-ingestion-menu
 python src/ingestion_menu.py
 ```
 
-### 2. Start MCP Server
+### 2. Start MCP Server (Menu Search)
 ```bash
 cd barista-agent-system/MCP-Server
 python menu_mcp/server.py
 ```
 
-### 3. Run Agents
-```python
-from orchestrator_agent import root_agent
+### 3. Start MCP Toolbox Server (Market Analytics)
+```bash
+cd barista-agent-system/agents/market_analyst_agent/tools
+./start-mcp-toolbox-server.sh
 ```
+
+Note: Update the script with your local Toolbox binary path.
+
+### 4. Run Agents
+```bash
+cd barista-agent-system
+poetry run adk web
+```
+
+Access the web UI at http://127.0.0.1:8000
 
 ## Environment Variables
 
+**Base Configuration** (all agents):
 ```bash
-LLM_AGENT=<gemini-model>
-MODEL_IMAGEN=<imagen-model>
+LLM_AGENT=gemini-1.5-pro-001
+MODEL_IMAGEN=image-generation-001
 PROJECT_ID=<gcp-project-id>
 GCS_BUCKET_NAME=<bucket-name>
-GOOGLE_API_KEY=<api-key>
+```
+
+**Market Analyst Agent** (additional):
+```bash
+TOOLBOX_URL=http://localhost:6000
+```
+
+**Pipeline Only**:
+```bash
+GOOGLE_API_KEY=<gemini-api-key>
 ```
 
 ## Key Concepts
@@ -104,6 +141,8 @@ GOOGLE_API_KEY=<api-key>
 - Retrieval: Top 2 results per query
 
 **MCP Integration**:
+- **MCP Server (Menu)**: Semantic search via Firestore vector embeddings
+- **MCP Toolbox (Analytics)**: BigQuery access for Wikipedia trend data
 - Remote tool access for agents
 - Decoupled business logic
 - HTTP streamable transport

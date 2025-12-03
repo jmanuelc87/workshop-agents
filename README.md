@@ -22,36 +22,52 @@ Explore fundamental agent patterns using **Google ADK** (Python) and **Firebase 
 
 This session builds on the fundamentals by constructing a practical, multi-agent system for a virtual coffee shop.
 
-- **Barista Agent System**: An advanced implementation featuring an orchestrator managing specialized agents (Head Barista, Creative Director) to handle customer interactions, menu queries, and creative tasks.
-- **Data Ingestion Pipeline**: A separate pipeline demonstrates how to process and structure external data (`menu.md`) to make it available for the agent system.
+- **Barista Agent System**: An advanced implementation featuring an orchestrator managing specialized agents:
+  - **Head Barista**: Menu queries and availability checks via semantic search (MCP Server)
+  - **Creative Director**: Image generation with Imagen 3 and promotions management
+  - **Market Analyst**: Global trend analysis using BigQuery and Wikipedia pageview data (MCP Toolbox)
+- **Data Ingestion Pipeline**: Processes menu data with Gemini embeddings and stores vectors in Firestore for RAG retrieval.
 
 **Topics covered:**
-- Complex multi-agent collaboration
+- Complex multi-agent collaboration with role-based delegation
 - System design for specialized agent roles
-- Integrating data ingestion pipelines with agent frameworks
+- MCP (Model Context Protocol) integration for remote tools
+- MCP Toolbox for database access (BigQuery)
+- RAG implementation with Firestore vector search
+- Data ingestion pipelines with embeddings
+- Real-time trend analysis and data-driven recommendations
 
 ## 🚀 Quick Start
 
 Each session contains detailed READMEs with setup instructions and examples.
 
 ```bash
-cd Session-1/ADK     # Python agents with Google ADK
-cd Session-1/genkit  # TypeScript agents with Firebase Genkit
-cd Session-2/barista-agent-system # Python multi-agent system
+cd Session-1/ADK                          # Python agents with Google ADK
+cd Session-1/genkit                       # TypeScript agents with Firebase Genkit
+cd Session-2/barista-agent-system         # Multi-agent coffee shop system
+cd Session-2/pipeline-data-ingestion-menu # Menu data pipeline with embeddings
 ```
 
 ## 🎯 Learning Objectives
 
 - Understand different agent orchestration patterns
 - Build agents with custom tools and APIs
-- Implement multi-agent systems
+- Implement multi-agent systems with role-based specialization
 - Apply feedback loops for quality improvement
 - Work with multi-modal AI capabilities
+- Integrate Model Context Protocol (MCP) for remote tool access
+- Build RAG systems with vector embeddings and Firestore
+- Connect agents to external data sources (BigQuery, APIs)
 
 ## 📋 Prerequisites
 
 - Python 3.10+ and/or Node.js 20+
-- Google AI API keys
+- Google AI API keys (Gemini)
+- Google Cloud Platform account (for Session 2)
+  - Firestore database
+  - Cloud Storage bucket
+  - BigQuery access (public datasets)
+- Poetry for Python dependency management
 - Basic understanding of async programming
 
 ---

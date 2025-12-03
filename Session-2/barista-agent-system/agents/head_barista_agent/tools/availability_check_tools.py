@@ -72,6 +72,13 @@ def check_availability_coffee(datetime: str) -> list[str]:
             "20:00": [
                 "Caramel Delight", "Mocha Magic", "Latte Lux", "Golden Turmeric Glow"
             ],
+            "21:00": [
+                "Caramel Delight", "Mocha Magic", "Latte Lux", "Golden Turmeric Glow"
+            ],
+            "22:00": [
+                "Mocha Magic", "Vanilla Dream", "Hazelnut Harmony", "Espresso Elixir",
+                "Chai Spice Serenity"
+            ],
         }
 
         logging.info(f"Checking availability for {datetime}")

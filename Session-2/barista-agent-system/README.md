@@ -13,8 +13,11 @@ The flow of a user request is as follows:
 3.  **Specialist Agents**: Each specialist handles a specific domain:
     *   **Head Barista Agent**: Manages menu inquiries, ingredient details, and stock availability.
     *   **Creative Director Agent**: Handles visual requests, such as generating images of coffee, and provides information on daily promotions.
-    *   **Market Analyst Agent**: (Planned Feature) Designed to answer questions about coffee trends, popularity, and market data.
-4.  **Tools & Services**: The agents use a set of tools to perform their tasks. This includes direct API calls to Google Cloud services (for image generation) and communication with a dedicated **Menu Control Protocol (MCP) Server** for semantic menu searches.
+    *   **Market Analyst Agent**: Analyzes global search trends and popularity data to provide data-driven drink recommendations based on real-world Wikipedia pageview statistics.
+4.  **Tools & Services**: The agents use a set of tools to perform their tasks. This includes:
+    *   Direct API calls to Google Cloud services (for image generation)
+    *   **Menu Control Protocol (MCP) Server** for semantic menu searches
+    *   **MCP Toolbox for Database** that provides access to BigQuery for global trend analysis
 5.  **Backend Services**: The entire system is supported by Google Cloud Platform services, including:
     *   **Google Gemini**: Powers the reasoning for all agents and generates text embeddings for semantic search.
     *   **Google Imagen**: Generates photorealistic images of coffee.
@@ -55,9 +58,25 @@ The flow of a user request is as follows:
     - `get_current_promotion()`: Retrieves the daily special from a mock list.
     - `get_menu_items()`: Directly queries the Firestore database to get visual details for building high-quality image generation prompts.
 
-### 4. MCP Server (Menu Control Protocol)
+### 4. Market Analyst Agent
+- **File**: `agents/market_analyst_agent/agent.py`
+- **Description**: The data and trends specialist. This agent analyzes global coffee popularity using real-time Wikipedia pageview data to provide data-driven recommendations.
+- **Key Tools**:
+    - **MCP Toolbox for Database**: Connects to a Toolbox server that exposes BigQuery tools for querying Wikipedia pageview trends.
+    - `drink_trend`: A BigQuery SQL tool that retrieves popularity scores for coffee-related search terms over the last 30 days.
+- **Configuration**: Requires a `TOOLBOX_URL` environment variable pointing to the running Toolbox server (default: `http://localhost:6000`).
+
+### 5. MCP Server (Menu Control Protocol)
 - **File**: `MCP-Server/menu_mcp/server.py`
 - **Description**: A standalone server built with `FastMCP`. It exposes a single tool, `get_menu_items`, which performs a semantic vector search on the menu. It takes a natural language query (e.g., "a warm, comforting drink"), converts it to a Gemini embedding, and finds the most similar items in the Firestore database.
+
+### 6. MCP Toolbox for Database
+- **File**: `agents/market_analyst_agent/tools/tools.yaml`
+- **Description**: A YAML configuration file that defines database connections and SQL tools for the Toolbox server. It connects to BigQuery's public Wikipedia dataset to analyze global search trends.
+- **Toolset**: `drinks_toolset` includes:
+    - `bigquery_get_table_info`: Retrieves table metadata.
+    - `bigquery_list_table_ids`: Lists available tables.
+    - `drink_trend`: Custom SQL query that returns popularity scores for coffee terms based on Wikipedia pageviews from the last 30 days.
 
 ---
 
@@ -103,7 +122,9 @@ The flow of a user request is as follows:
     ```
 
 4.  **Configure Environment Variables:**
-    Create a `.env` file in the root directory and add the following variables. You will also need to create a `.env` file in each agent's directory (`head_barista_agent`, `creative_director_agent`, `orchestrator_agent`) and in the `MCP-Server/menu_mcp` directory with the same content.
+    Create a `.env` file in the root directory and add the following variables. You will also need to create a `.env` file in each agent's directory (`head_barista_agent`, `creative_director_agent`, `orchestrator_agent`, `market_analyst_agent`) and in the `MCP-Server/menu_mcp` directory.
+    
+    **Base configuration** (for all agents):
     ```env
     # Google Cloud Project ID
     PROJECT_ID="your-gcp-project-id"
@@ -116,6 +137,12 @@ The flow of a user request is as follows:
 
     # Name of the Google Cloud Storage bucket for images
     GCS_BUCKET_NAME="your-gcs-bucket-name"
+    ```
+    
+    **Additional configuration for Market Analyst Agent** (`agents/market_analyst_agent/.env`):
+    ```env
+    # URL of the MCP Toolbox server for database access
+    TOOLBOX_URL="http://localhost:6000"
     ```
 
 5.  **Set up Firestore:**
